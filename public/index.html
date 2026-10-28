@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LiveBazaar - Real-Time Live Auction Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ================= TOP NAVIGATION (Amazon-Style) ================= -->
+  <header class="site-header">
+    <div class="top-nav">
+      <!-- Logo -->
+      <a class="logo-area" onclick="navigate('role-select')">
+        <div class="logo-icon">⚡</div>
+        <div class="logo-title">Live<span>Bazaar</span></div>
+      </a>
+
+      <!-- Active Role Pill -->
+      <div id="nav-role-badge" class="role-pill guest">Selecting Role</div>
+
+      <!-- Amazon Search Bar (Visible for Bidders or General Navigation) -->
+      <div class="nav-search-container" id="nav-search-container">
+        <select class="search-category-select" id="nav-search-category" onchange="handleSearch()">
+          <option value="All">All Categories</option>
+          <option value="Electronics & Tech">Electronics</option>
+          <option value="Watches & Luxury">Watches & Luxury</option>
+          <option value="Audio & Music">Audio & Music</option>
+          <option value="Sneakers & Apparel">Sneakers</option>
+        </select>
+        <input 
+          type="text" 
+          class="search-input-box" 
+          id="nav-search-input" 
+          placeholder="Search products, brands, or live rooms..." 
+          onkeyup="handleSearchKey(event)"
+        />
+        <button class="search-btn" onclick="handleSearch()" title="Search Auctions">
+          🔍
+        </button>
+      </div>
+
+      <!-- Nav Actions: System Counter, Balances, User Menu -->
+      <div class="nav-actions">
+        <!-- Max 10 Users Constraint Tracker -->
+        <div class="system-counter-badge" id="system-user-counter" title="Platform constraint: Maximum 10 registered users total">
+          <span class="dot"></span>
+          <span id="counter-text">Users: 4/10</span>
+        </div>
+
+        <!-- Balance Chip (Click to view account) -->
+        <button class="user-balance-chip" id="user-balance-chip" style="display: none;" onclick="navigate('account')">
+          <span>💰</span>
+          <span id="nav-balance-val">$0.00</span>
+        </button>
+
+        <!-- Dynamic User Actions -->
+        <div id="nav-auth-buttons">
+          <button class="nav-link-btn primary" onclick="navigate('role-select')">Select Role</button>
+        </div>
+
+        <div id="nav-user-menu" style="display: none; align-items: center; gap: 10px;">
+          <button class="nav-link-btn" onclick="navigate('account')" title="Account details & previous transactions">
+            👤 <span id="nav-user-name">Account</span>
+          </button>
+          <button class="nav-link-btn" id="nav-create-btn" style="display: none;" onclick="navigate('create-room')">
+            ➕ Put Item on Auction
+          </button>
+          <button class="nav-link-btn" id="nav-explore-btn" style="display: none;" onclick="navigate('marketplace')">
+            🛒 Live Auctions
+          </button>
+          <button class="nav-link-btn" onclick="logout()" title="Sign out">
+            🚪 Exit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-Navigation Bar -->
+    <nav class="sub-nav">
+      <a class="subnav-item" onclick="navigate('role-select')">🔁 Switch Role</a>
+      <a class="subnav-item active" id="subnav-home" onclick="handleSubnavHome()">⚡ Today's Live Bids</a>
+      <a class="subnav-item" onclick="filterCategory('Electronics & Tech')">📱 Electronics</a>
+      <a class="subnav-item" onclick="filterCategory('Watches & Luxury')">⌚ Luxury Watches</a>
+      <a class="subnav-item" onclick="filterCategory('Audio & Music')">🎧 High-End Audio</a>
+      <a class="subnav-item" onclick="navigate('account')">📜 Transactions & Escrow</a>
+      <span style="margin-left: auto; color: #94a3b8; font-size: 12px;" id="current-room-indicator"></span>
+    </nav>
+  </header>
+
+  <!-- ================= MAIN CONTENT WRAPPER ================= -->
+  <main class="main-wrapper">
+
+    <!-- VIEW 1: ROLE SELECTION SCREEN (Entry point) -->
+    <section id="view-role-select" class="view-section active">
+      <div class="role-portal-hero">
+        <h1>Welcome to <span>LiveBazaar</span></h1>
+        <p>Choose your role to enter the live auction arena. Seamless real-time bidding, verified escrow settlement, and instant auction room creation.</p>
+      </div>
+
+      <div class="role-cards-grid">
+        <!-- USER 1: AUCTIONEER CARD -->
+        <div class="role-card auctioner-card" onclick="selectRole('auctioner')">
+          <div class="role-card-badge">ROLE: USER 1</div>
+          <div class="role-card-icon">🏛️</div>
+          <h2>I am an Auctioneer</h2>
+          <p>Put your items up for live bidding, create customized rooms, showcase high-res photos, and command the auction stage with live hammer calls.</p>
+          <ul class="role-card-features">
+            <li>✓ Create Amazon-style product listings with photos</li>
+            <li>✓ Command stage: "Going Once.. Going Twice.. SOLD!"</li>
+            <li>✓ Track live buyer payment status in real-time</li>
+            <li>✓ Automated funds credit upon deal closure</li>
+          </ul>
+          <button class="role-select-btn">
+            Enter as Auctioneer (User 1) →
+          </button>
+        </div>
+
+        <!-- USER 2: BIDDER CARD -->
+        <div class="role-card bidder-card" onclick="selectRole('bidder')">
+          <div class="role-card-badge">ROLE: USER 2</div>
+          <div class="role-card-icon">🎯</div>
+          <h2>I am a Bidder</h2>
+          <p>Search Amazon-style listings, enter live bidding rooms matching your balance, place competitive bids, and win luxury items with secure checkout.</p>
+          <ul class="role-card-features">
+            <li>✓ Search live rooms with instant balance checks</li>
+            <li>✓ Dynamic interactive bidding with custom raises</li>
+            <li>✓ Automatic Viewer Mode if bid exceeds balance</li>
+            <li>✓ Instant Escrow checkout upon winning the deal</li>
+          </ul>
+          <button class="role-select-btn">
+            Enter as Bidder (User 2) →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: AUTHENTICATION SCREEN (Login & Register) -->
+    <section id="view-auth" class="view-section">
+      <div class="auth-box-container">
+        <div class="auth-header">
+          <div id="auth-role-indicator" class="role-pill" style="display: inline-block; margin-bottom: 8px;">USER 1</div>
+          <h2 id="auth-title">Sign In to Your Account</h2>
+          <p id="auth-subtitle">Please enter your credentials to access your dashboard</p>
+        </div>
+
+        <!-- Login / Register Switch Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Log In</button>
+          <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+
+        <!-- Registration Limit Warning Notice -->
+        <div id="auth-limit-banner" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 16px;">
+          ⚠️ <strong>System Constraint:</strong> Only 10 total users allowed across the system. <span id="slots-left-text"></span>
+        </div>
+
+        <!-- Form -->
+        <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+          <div class="form-group" id="group-name" style="display: none;">
+            <label for="input-name">Full Name</label>
+            <input type="text" id="input-name" class="form-input" placeholder="e.g. John Doe" />
+          </div>
+
+          <div class="form-group">
+            <label for="input-email">Email Address</label>
+            <input type="email" id="input-email" class="form-input" required placeholder="e.g. name@domain.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="input-password">Password</label>
+            <input type="password" id="input-password" class="form-input" required placeholder="••••••••" />
+          </div>
+
+          <div class="form-group" id="group-balance" style="display: none;">
+            <label for="input-balance">Initial Starting Balance ($)</label>
+            <input type="number" id="input-balance" class="form-input" min="100" step="50" value="10000" />
+            <span style="font-size: 11px; color: var(--text-muted);">Required for Bidders to enter and bid on auction rooms.</span>
+          </div>
+
+          <button type="submit" id="btn-auth-submit" class="form-submit-btn">
+            Log In
+          </button>
+        </form>
+
+        <!-- Quick Demo Accounts for Seamless One-Click Testing -->
+        <div class="demo-credentials-box">
+          <h4>⚡ Instant Demo Credentials (Click to Autofill)</h4>
+          <div class="quick-login-grid" id="quick-demo-buttons">
+            <!-- Dynamically populated based on active role -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: ACCOUNT DETAILS, BALANCE & PREVIOUS TRANSACTIONS -->
+    <section id="view-account" class="view-section">
+      <div class="account-overview-grid">
+        <!-- Profile Card -->
+        <div class="profile-card">
+          <div class="profile-avatar-row">
+            <div class="profile-avatar" id="acc-avatar">U</div>
+            <div class="profile-info">
+              <h3 id="acc-name">User Name</h3>
+              <div class="profile-badge" id="acc-role-badge">Auctioneer (User 1)</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">User ID:</span>
+            <span class="value" id="acc-id" style="font-family: var(--font-mono); color: #fbbf24;">USR-000</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Registered Email:</span>
+            <span class="value" id="acc-email">user@domain.com</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">System Role:</span>
+            <span class="value" id="acc-role-name">User 1 (Auctioner)</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Account Status:</span>
+            <span class="value" style="color: var(--accent-success);">● Verified & Active</span>
+          </div>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+          <div>
+            <div class="balance-label">
+              <span>💳</span> Available Liquid Account Balance
+            </div>
+            <div class="balance-amount" id="acc-balance-display">$0.00</div>
+            <p style="color: #94a3b8; font-size: 13px; margin-top: 6px;">
+              Used for room entry collateral, placing bids, or receiving seller auction proceeds.
+            </p>
+          </div>
+
+          <div class="balance-actions">
+            <button class="action-btn deposit" onclick="promptDeposit()">
+              ➕ Add Funds / Top-Up
+            </button>
+            <button class="action-btn create-auction" id="acc-action-btn" onclick="handleAccountActionBtn()">
+              🚀 Put Item on Auction
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Operations Hub (Further Operations for Logged-In User) -->
+      <div class="operations-hub-container">
+        <div class="operations-hub-header">
+          <h3>⚡ Quick Operations & Next Steps</h3>
+          <span style="font-size: 13px; color: var(--text-muted);">Choose your next action below or use the top menu</span>
+        </div>
+        <div class="operations-grid" id="operations-grid">
+          <!-- Dynamically populated based on active role -->
+        </div>
+      </div>
+
+      <!-- Previous Transactions Panel -->
+      <div class="data-panel">
+        <div class="panel-header">
+          <h3>📜 Previous Transaction History</h3>
+          <span style="font-size: 13px; color: var(--text-muted);" id="txn-count-label">0 transactions</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Room / Counterparty</th>
+                <th>Amount</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- For Bidder: My Won Items Inventory -->
+      <div class="data-panel" id="bidder-inventory-panel" style="display: none;">
+        <div class="panel-header">
+          <h3>🏆 My Won Items (Claimed from Closed Auctions)</h3>
+        </div>
+        <div class="won-items-grid" id="won-items-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: USER 1 - PUT ITEM ON AUCTION (Create Room - Amazon Style) -->
+    <section id="view-create-room" class="view-section">
+      <div class="create-room-container">
+        <div class="create-room-header">
+          <h2>Put an Item on Live Auction</h2>
+          <p>Create an auction room just like an Amazon product page. Specify minimum bid amount, detailed descriptions, and high-resolution photos.</p>
+        </div>
+
+        <!-- Quick Sample Item Presets for Instant Demo -->
+        <div class="preset-picker-row">
+          <h4>⚡ Quick Presets (Click to autofill high-res items)</h4>
+          <div class="preset-pills">
+            <button class="preset-pill-btn" onclick="applyPreset('macbook')">💻 M3 Max MacBook Pro</button>
+            <button class="preset-pill-btn" onclick="applyPreset('rolex')">⌚ Rolex Submariner Date</button>
+            <button class="preset-pill-btn" onclick="applyPreset('camera')">📷 Leica M11 Rangefinder</button>
+            <button class="preset-pill-btn" onclick="applyPreset('sneakers')">👟 Nike Air Jordan 1 '85</button>
+          </div>
+        </div>
+
+        <form id="create-room-form" onsubmit="handleCreateRoomSubmit(event)">
+          <div class="form-group">
+            <label for="item-title">Item Title *</label>
+            <input type="text" id="item-title" class="form-input" required placeholder="e.g. Sony Alpha 7 IV Full-Frame Camera" />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="item-category">Product Category *</label>
+              <select id="item-category" class="form-select">
+                <option value="Electronics & Tech">Electronics & Tech</option>
+                <option value="Watches & Luxury">Watches & Luxury</option>
+                <option value="Audio & Music">Audio & Music</option>
+                <option value="Sneakers & Apparel">Sneakers & Apparel</option>
+                <option value="Art & Collectibles">Art & Collectibles</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="item-brand">Brand / Manufacturer</label>
+              <input type="text" id="item-brand" class="form-input" placeholder="e.g. Sony, Apple, Rolex" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="item-condition">Item Condition</label>
+              <select id="item-condition" class="form-select">
+                <option value="Brand New (Factory Sealed)">Brand New (Factory Sealed)</option>
+                <option value="Open Box - Never Used">Open Box - Never Used</option>
+                <option value="Refurbished - Certified">Refurbished - Certified</option>
+                <option value="Collector Grade / Mint">Collector Grade / Mint</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="item-minbid">Minimum Starting Bid ($) *</label>
+              <input type="number" id="item-minbid" class="form-input" min="1" step="10" required placeholder="e.g. 500" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="item-images">Item Image URLs (Comma-separated or presets above) *</label>
+            <input type="text" id="item-images" class="form-input" required placeholder="https://images.unsplash.com/..." oninput="updateImagePreview()" />
+            <div class="image-preview-strip" id="image-preview-strip"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="item-description">Item Description & Technical Specifications (Amazon Style) *</label>
+            <textarea id="item-description" class="form-input" rows="5" required placeholder="Describe item specs, dimensions, warranty, included accessories, and condition in detail..."></textarea>
+          </div>
+
+          <button type="submit" class="form-submit-btn" style="background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 16px;">
+            🚀 Create Room & Open Auction for Bidders
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW 5: USER 2 - AMAZON STYLE MARKETPLACE & SEARCH -->
+    <section id="view-marketplace" class="view-section">
+      <div class="marketplace-header-banner">
+        <div class="banner-text">
+          <h2>Live Auction Marketplace</h2>
+          <p>Browse active auction rooms, compare current bids with your balance, and enter rooms to participate.</p>
+        </div>
+        <div class="balance-reminder-badge" id="marketplace-balance-badge">
+          Your Account Balance: $0.00
+        </div>
+      </div>
+
+      <!-- Category Filter Chips -->
+      <div class="category-filter-chips">
+        <button class="category-chip active" onclick="filterCategory('All')">All Items</button>
+        <button class="category-chip" onclick="filterCategory('Electronics & Tech')">Electronics & Tech</button>
+        <button class="category-chip" onclick="filterCategory('Watches & Luxury')">Watches & Luxury</button>
+        <button class="category-chip" onclick="filterCategory('Audio & Music')">Audio & Music</button>
+        <button class="category-chip" onclick="filterCategory('Sneakers & Apparel')">Sneakers</button>
+      </div>
+
+      <!-- Active Rooms / Products Grid -->
+      <div class="products-grid" id="products-grid">
+        <!-- Dynamically rendered Amazon product cards -->
+      </div>
+    </section>
+
+    <!-- VIEW 6: LIVE AUCTION ARENA ROOM (Shared by User 1 & User 2) -->
+    <section id="view-auction-room" class="view-section">
+      <!-- Room Top Meta Bar -->
+      <div class="room-top-bar">
+        <div class="room-meta-group">
+          <button class="back-to-rooms-btn" onclick="exitRoom()">
+            ← Leave Room
+          </button>
+          <div class="room-live-pill">
+            <span class="dot"></span> LIVE AUCTION
+          </div>
+          <span style="font-family: var(--font-mono); font-weight: 700; color: #fbbf24;" id="room-id-display">ROOM-0000</span>
+          <span style="color: var(--text-muted); font-size: 13px;">Host: <strong id="room-host-display" style="color: #fff;">Host</strong></span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Sound chimes toggle -->
+          <button class="nav-link-btn" onclick="toggleAudio()" id="audio-toggle-btn" title="Toggle hammer and bid sound chimes">
+            🔔 Sound: ON
+          </button>
+          <div class="system-counter-badge" id="room-attendee-badge">
+            👥 1 in room
+          </div>
+        </div>
+      </div>
+
+      <!-- Dual Column Layout -->
+      <div class="auction-room-layout">
+        <!-- LEFT COLUMN: Amazon Product Showcase -->
+        <div class="product-showcase-panel">
+          <!-- Main Product Gallery -->
+          <div class="main-image-container">
+            <img id="room-main-img" src="" alt="Item photo" class="main-product-img" />
+          </div>
+          <div class="thumb-gallery-strip" id="room-gallery-thumbs"></div>
+
+          <!-- Product Details -->
+          <div class="product-detail-specs">
+            <div class="product-category-tag" id="room-category-display">CATEGORY</div>
+            <h1 id="room-title-display">Product Title</h1>
+
+            <div class="product-meta-row">
+              <span>Brand: <strong class="highlight" id="room-brand-display">Brand</strong></span>
+              <span>•</span>
+              <span>Condition: <strong class="highlight" id="room-condition-display">Brand New</strong></span>
+              <span>•</span>
+              <span class="amazon-rating">★★★★★ <span class="rating-count">(4.9/5 verified)</span></span>
+            </div>
+
+            <div class="product-features-list">
+              <h4>About this item</h4>
+              <p id="room-desc-display">Detailed product specifications...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Live Auction Broadcast Stage & Bidding Console -->
+        <div class="live-auction-console">
+          <!-- Highest Bid Ticker -->
+          <div class="bid-ticker-card">
+            <div class="ticker-subhead">Current Highest Bid</div>
+            <div class="ticker-amount" id="room-current-bid-display">$0</div>
+            <div class="highest-bidder-pill" id="room-highest-bidder-display">
+              🏆 Leading Bidder: None yet
+            </div>
+          </div>
+
+          <!-- Live Stage Announcement Banner -->
+          <div class="stage-announcement-banner" id="room-stage-banner">
+            Auction is LIVE. Bids are being accepted.
+          </div>
+
+          <!-- ================= USER 1 (AUCTIONEER) CONTROLS ================= -->
+          <div class="auctioner-stage-controls" id="auctioner-stage-panel" style="display: none;">
+            <h4>🏛️ Host Auctioneer Stage Command Console</h4>
+            <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 12px;">
+              Direct the live bidding sequence. Call Going Once, Going Twice, and drop the hammer (SOLD!) mentioning the winning user ID:
+            </p>
+
+            <div class="stage-btn-group">
+              <button class="stage-action-btn once" onclick="triggerAuctionStage('going_once')">
+                📢 Going Once..
+              </button>
+              <button class="stage-action-btn twice" onclick="triggerAuctionStage('going_twice')">
+                📢 Going Twice..
+              </button>
+              <button class="stage-action-btn sold-hammer" onclick="triggerAuctionStage('sold')">
+                🔨 SOLD!
+              </button>
+            </div>
+
+            <!-- Payment Status Indication for Auctioneer -->
+            <div class="payment-tracker-box">
+              <span style="font-size: 13px; font-weight: 600; color: #cbd5e1;">Highest Bidder Payment:</span>
+              <span class="payment-status-pill not-paid" id="auctioner-payment-status-pill">Not Paid</span>
+            </div>
+          </div>
+
+          <!-- ================= USER 2 (BIDDER) CONSOLE ================= -->
+          <div class="bidder-bidding-console" id="bidder-bidding-panel" style="display: none;">
+            <!-- Viewer Mode Alert (shown if currentBid > user balance) -->
+            <div class="viewer-mode-alert" id="viewer-mode-alert" style="display: none;">
+              <span style="font-size: 24px;">👀</span>
+              <div>
+                <h4>Viewer Mode Active</h4>
+                <p>
+                  The current bid ($<span id="viewer-cur-bid"></span>) exceeds your account balance ($<span id="viewer-my-bal"></span>).
+                  You may continue watching the live auction or exit the room.
+                </p>
+                <button class="back-to-rooms-btn" style="margin-top: 8px; background: rgba(255,255,255,0.1);" onclick="exitRoom()">
+                  Exit Room
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Bidding Controls -->
+            <div id="active-bidding-controls">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <label style="font-size: 13px; font-weight: 700; color: #cbd5e1;">Enter Your Bid Amount ($):</label>
+                <span style="font-size: 12px; color: var(--accent-success); font-weight: 600;" id="bidder-available-bal">Balance: $0</span>
+              </div>
+
+              <!-- Quick Increment Buttons -->
+              <div class="quick-increment-row">
+                <button class="quick-inc-btn" onclick="addQuickIncrement(50)">+$50</button>
+                <button class="quick-inc-btn" onclick="addQuickIncrement(100)">+$100</button>
+                <button class="quick-inc-btn" onclick="addQuickIncrement(250)">+$250</button>
+                <button class="quick-inc-btn" onclick="addQuickIncrement(500)">+$500</button>
+              </div>
+
+              <!-- Custom Number Bar -->
+              <div class="bid-input-container">
+                <input 
+                  type="number" 
+                  id="bid-number-bar" 
+                  class="bid-number-bar" 
+                  min="1" 
+                  step="10" 
+                  placeholder="Enter bid..." 
+                />
+                <button class="submit-bid-btn" id="submit-bid-btn" onclick="submitBid()">
+                  ⚡ Bid Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Bid History & Audience Tickers -->
+          <div class="auction-log-tabs">
+            <div class="log-tab-headers">
+              <button class="log-tab-btn active" id="tab-log-bids" onclick="switchLogTab('bids')">Live Bids Stream</button>
+              <button class="log-tab-btn" id="tab-log-audience" onclick="switchLogTab('audience')">Room Audience</button>
+            </div>
+
+            <!-- Bids Stream List -->
+            <ul class="live-bid-list" id="room-bids-list">
+              <li style="text-align: center; color: var(--text-dim); padding: 14px;">No bids submitted yet. Be the first to bid!</li>
+            </ul>
+
+            <!-- Audience List -->
+            <ul class="audience-list" id="room-audience-list" style="display: none;">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 7: MANDATORY LOCKED PAYMENT PAGE (User 2 Winner) -->
+    <!-- "If the user 2 bids the highest and the deal closes then they must be directed to the payment page where the user 2 cannot exit the page until they pay." -->
+    <section id="view-payment" class="view-section">
+      <div class="locked-payment-container">
+        <!-- Lock Shield Banner -->
+        <div class="lock-shield-badge">
+          🔒 Secure Escrow Checkout • Navigation Locked
+        </div>
+
+        <div class="payment-hero-title">
+          <h2>🎉 Congratulations! You Won the Auction!</h2>
+          <p>The auctioneer has hammered the deal SOLD to you. Please complete your payment to finalize transfer and claim your item.</p>
+        </div>
+
+        <!-- Order Summary Box -->
+        <div class="order-summary-box">
+          <div class="order-item-row">
+            <img id="pay-item-img" src="" alt="Won Item" class="order-item-img" />
+            <div class="order-item-details">
+              <div class="product-category-tag" id="pay-item-cat">Category</div>
+              <h4 id="pay-item-title">Item Title</h4>
+              <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Room ID: <span id="pay-room-id" style="font-family: var(--font-mono); color: #fbbf24;"></span> • 
+                Seller ID: <span id="pay-seller-id" style="font-family: var(--font-mono); color: #818cf8;"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="invoice-breakdown">
+            <div class="invoice-row">
+              <span>Winning Bid Hammer Amount:</span>
+              <strong id="pay-bid-amount">$0.00</strong>
+            </div>
+            <div class="invoice-row">
+              <span>Buyer Protection & Escrow Fee:</span>
+              <span style="color: var(--accent-success);">$0.00 (Waived)</span>
+            </div>
+            <div class="invoice-row">
+              <span>Insured Expedited Delivery:</span>
+              <span style="color: var(--accent-success);">FREE</span>
+            </div>
+            <div class="invoice-row total">
+              <span>Total Settlement Due:</span>
+              <span id="pay-total-amount" style="color: var(--accent-success); font-size: 22px;">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Escrow Guarantee Box -->
+        <div class="escrow-assurance-box">
+          <span style="font-size: 24px;">🛡️</span>
+          <div>
+            <strong>LiveBazaar Escrow Settlement Guarantee</strong><br />
+            Upon payment, $<span id="pay-escrow-amount"></span> will be immediately transferred to the Auctioneer's account, and the title ownership will be permanently credited to your inventory.
+          </div>
+        </div>
+
+        <!-- Payment Actions -->
+        <div class="payment-action-card">
+          <button class="pay-now-btn" id="pay-now-btn" onclick="executeWinningPayment()">
+            💳 Confirm & Pay Now with Account Balance
+          </button>
+
+          <!-- Under Process Indicator -->
+          <div class="processing-state" id="payment-processing-spinner">
+            <div class="spinner"></div>
+            <h4 style="color: #f59e0b; margin-bottom: 4px;">Escrow Payment Under Process...</h4>
+            <p style="font-size: 13px; color: #cbd5e1;">Synchronizing with the auctioneer and transferring item ownership...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= TOAST CONTAINER ================= -->
+  <div id="toast-container"></div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <strong>LiveBazaar™</strong> — Real-Time Live Auction Marketplace. Built with high-contrast Amazon UI standards.
+      </div>
+      <div>
+        Maximum System Capacity: <strong>10 Registered Users</strong> • Powered by Sub-Millisecond SSE Streaming
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

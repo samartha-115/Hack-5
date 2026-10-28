@@ -1,0 +1,18 @@
+{
+  "name": "live-auction-platform",
+  "version": "1.0.0",
+  "description": "Real-time Live Auction Platform with Amazon-grade UI, Auctioneer (User 1) & Bidder (User 2) portals, dynamic viewer mode, and locked escrow checkout.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "auction",
+    "live-bidding",
+    "real-time",
+    "sse",
+    "escrow"
+  ],
+  "author": "Antigravity",
+  "license": "ISC"
+}

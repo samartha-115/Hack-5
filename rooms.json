@@ -1,0 +1,75 @@
+[
+  {
+    "id": "ROOM-5001",
+    "auctionerId": "USR-101",
+    "auctionerName": "Sarah Connor",
+    "title": "Sony Alpha 7 IV Full-Frame Mirrorless Camera (Brand New)",
+    "category": "Electronics & Tech",
+    "brand": "Sony",
+    "condition": "Brand New (Factory Sealed)",
+    "description": "33MP Full-Frame Exmor R CMOS Sensor, 4K 60p 10-Bit Video, BIONZ XR Image Processor, 8-stop IBIS, dual UHS-II SD/CFexpress card slots. Includes 24-70mm f/2.8 G-Master lens and 3 years manufacturer warranty. Pristine factory seal.",
+    "images": [
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?w=800&auto=format&fit=crop&q=80"
+    ],
+    "minBid": 2400,
+    "currentBid": 2400,
+    "highestBidderId": null,
+    "highestBidderName": null,
+    "status": "active",
+    "stageMessage": "Auction is LIVE. Bids are being accepted.",
+    "paymentStatus": "not_paid",
+    "connectedUsers": [],
+    "bidHistory": [],
+    "createdAt": "2026-10-28T06:50:16.995Z"
+  },
+  {
+    "id": "ROOM-5002",
+    "auctionerId": "USR-102",
+    "auctionerName": "Marcus Vance",
+    "title": "Omega Speedmaster Professional Chronograph (Moonwatch)",
+    "category": "Watches & Luxury",
+    "brand": "Omega",
+    "condition": "Mint Condition with Papers",
+    "description": "Certified Master Chronometer Co-Axial Calibre 3861, Hesalite crystal, legendary manual-winding flight-qualified for NASA Apollo missions. Complete set with presentation box, extra NATO strap, loupe, and international warranty card.",
+    "images": [
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&auto=format&fit=crop&q=80"
+    ],
+    "minBid": 5500,
+    "currentBid": 5500,
+    "highestBidderId": null,
+    "highestBidderName": null,
+    "status": "active",
+    "stageMessage": "Auction is LIVE. Opening bid set at $5,500.",
+    "paymentStatus": "not_paid",
+    "connectedUsers": [],
+    "bidHistory": [],
+    "createdAt": "2026-10-28T06:50:16.995Z"
+  },
+  {
+    "id": "ROOM-5003",
+    "auctionerId": "USR-101",
+    "auctionerName": "Sarah Connor",
+    "title": "Bose QuietComfort Ultra Wireless Noise Cancelling Headphones",
+    "category": "Audio & Music",
+    "brand": "Bose",
+    "condition": "Brand New",
+    "description": "Breakthrough spatialized audio with CustomTune sound calibration, world-class active noise cancellation, ultra-soft luxury earcups, and 24-hour battery life. Deep Black finish.",
+    "images": [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop&q=80"
+    ],
+    "minBid": 350,
+    "currentBid": 350,
+    "highestBidderId": null,
+    "highestBidderName": null,
+    "status": "active",
+    "stageMessage": "Auction is LIVE. Accepting initial bids.",
+    "paymentStatus": "not_paid",
+    "connectedUsers": [],
+    "bidHistory": [],
+    "createdAt": "2026-10-28T06:50:16.995Z"
+  }
+]

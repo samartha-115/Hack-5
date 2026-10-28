@@ -1,0 +1,147 @@
+[
+  {
+    "id": "USR-101",
+    "name": "Sarah Connor",
+    "email": "auctioner1@liveauction.com",
+    "password": "password123",
+    "role": "auctioner",
+    "balance": 9900,
+    "transactions": [
+      {
+        "id": "TXN-SETTLE-C",
+        "type": "credit",
+        "amount": 4200,
+        "description": "Auction Proceeds: Apple Vision Pro 1TB Developer Edition",
+        "roomId": "ROOM-7009",
+        "counterpartyId": "USR-201",
+        "timestamp": "2026-10-28T07:14:58.977Z"
+      },
+      {
+        "id": "TXN-SETTLE-C",
+        "type": "credit",
+        "amount": 4200,
+        "description": "Auction Proceeds: Apple Vision Pro 1TB Developer Edition",
+        "roomId": "ROOM-9739",
+        "counterpartyId": "USR-201",
+        "timestamp": "2026-10-28T06:51:06.503Z"
+      },
+      {
+        "id": "TXN-001",
+        "type": "credit",
+        "amount": 1500,
+        "description": "Initial Seller Deposit & Verification Grant",
+        "roomId": "SYSTEM",
+        "counterpartyId": "SYSTEM",
+        "timestamp": "2026-10-26T06:50:16.993Z"
+      }
+    ],
+    "wonItems": [],
+    "createdRooms": [
+      "ROOM-5001",
+      "ROOM-9739",
+      "ROOM-7009"
+    ]
+  },
+  {
+    "id": "USR-102",
+    "name": "Marcus Vance",
+    "email": "auctioner2@liveauction.com",
+    "password": "password123",
+    "role": "auctioner",
+    "balance": 850,
+    "transactions": [
+      {
+        "id": "TXN-002",
+        "type": "credit",
+        "amount": 850,
+        "description": "Opening Escrow Deposit",
+        "roomId": "SYSTEM",
+        "counterpartyId": "SYSTEM",
+        "timestamp": "2026-10-27T06:50:16.995Z"
+      }
+    ],
+    "wonItems": [],
+    "createdRooms": [
+      "ROOM-5002"
+    ]
+  },
+  {
+    "id": "USR-201",
+    "name": "Alex Mercer",
+    "email": "bidder1@liveauction.com",
+    "password": "password123",
+    "role": "bidder",
+    "balance": 10100,
+    "transactions": [
+      {
+        "id": "TXN-SETTLE-D",
+        "type": "debit",
+        "amount": 4200,
+        "description": "Auction Purchase: Apple Vision Pro 1TB Developer Edition",
+        "roomId": "ROOM-7009",
+        "counterpartyId": "USR-101",
+        "timestamp": "2026-10-28T07:14:58.977Z"
+      },
+      {
+        "id": "TXN-SETTLE-D",
+        "type": "debit",
+        "amount": 4200,
+        "description": "Auction Purchase: Apple Vision Pro 1TB Developer Edition",
+        "roomId": "ROOM-9739",
+        "counterpartyId": "USR-101",
+        "timestamp": "2026-10-28T06:51:06.503Z"
+      },
+      {
+        "id": "TXN-003",
+        "type": "credit",
+        "amount": 18500,
+        "description": "Bank Wire Liquidity Deposit",
+        "roomId": "SYSTEM",
+        "counterpartyId": "SYSTEM",
+        "timestamp": "2026-10-25T06:50:16.995Z"
+      }
+    ],
+    "wonItems": [
+      {
+        "id": "ITEM-CLAIMED",
+        "title": "Apple Vision Pro 1TB Developer Edition",
+        "category": "Electronics & Tech",
+        "purchasePrice": 4200,
+        "sellerId": "USR-101",
+        "sellerName": "Sarah Connor",
+        "purchasedAt": "2026-10-28T07:14:58.977Z"
+      },
+      {
+        "id": "ITEM-CLAIMED",
+        "title": "Apple Vision Pro 1TB Developer Edition",
+        "category": "Electronics & Tech",
+        "purchasePrice": 4200,
+        "sellerId": "USR-101",
+        "sellerName": "Sarah Connor",
+        "purchasedAt": "2026-10-28T06:51:06.503Z"
+      }
+    ],
+    "createdRooms": []
+  },
+  {
+    "id": "USR-202",
+    "name": "Elena Rostova",
+    "email": "bidder2@liveauction.com",
+    "password": "password123",
+    "role": "bidder",
+    "balance": 6200,
+    "transactions": [
+      {
+        "id": "TXN-004",
+        "type": "credit",
+        "amount": 6200,
+        "description": "Verified Bidder Account Credit",
+        "roomId": "SYSTEM",
+        "counterpartyId": "SYSTEM",
+        "timestamp": "2026-10-27T06:50:16.995Z"
+      }
+    ],
+    "wonItems": [],
+    "createdRooms": []
+  }
+]

@@ -1,0 +1,3 @@
+@echo off
+echo Starting MongoDB on Port 27018...
+"C:\Program Files\MongoDB\Server\9.0\bin\mongod.exe" --config "%~dp0data\mongod.cfg"
